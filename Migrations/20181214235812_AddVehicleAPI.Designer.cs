@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vega.Persistence;
 
 namespace Vega.Migrations
 {
     [DbContext(typeof(VegaDbContext))]
-    partial class VegaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181214235812_AddVehicleAPI")]
+    partial class AddVehicleAPI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,9 +91,13 @@ namespace Vega.Migrations
 
                     b.Property<DateTime>("LastUpdate");
 
+                    b.Property<int?>("MakeId");
+
                     b.Property<int>("ModelId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MakeId");
 
                     b.HasIndex("ModelId");
 
@@ -114,13 +120,17 @@ namespace Vega.Migrations
             modelBuilder.Entity("Vega.Models.Model", b =>
                 {
                     b.HasOne("Vega.Models.Make", "Make")
-                        .WithMany("Models")
+                        .WithMany()
                         .HasForeignKey("MakeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Vega.Models.Vehicle", b =>
                 {
+                    b.HasOne("Vega.Models.Make")
+                        .WithMany("Models")
+                        .HasForeignKey("MakeId");
+
                     b.HasOne("Vega.Models.Model", "Model")
                         .WithMany()
                         .HasForeignKey("ModelId")
