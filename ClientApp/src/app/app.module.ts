@@ -13,6 +13,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { TestComponent } from './test/test.component';
 import { HttpModule } from '@angular/http';
+import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { HttpModule } from '@angular/http';
     CounterComponent,
     FetchDataComponent,
     VehicleFormComponent,
-    TestComponent
+    TestComponent,
+    VehicleListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -30,9 +32,11 @@ import { HttpModule } from '@angular/http';
     HttpModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'home', component: HomeComponent, pathMatch: 'full' },
+      { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
       { path: 'vehicles/new', component: VehicleFormComponent },
       { path: 'vehicles/:id', component: VehicleFormComponent },
+      { path: 'vehicles', component: VehicleListComponent },
       { path : 'test', component: TestComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
