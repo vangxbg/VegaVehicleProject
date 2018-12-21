@@ -2,16 +2,15 @@ using AutoMapper;
 using System.Linq;
 using Vega.Controllers.Resources;
 using Vega.Core.Models;
-using System.Collections.Generic;
 
-namespace vega.Mapping
+namespace Vega.Mapping
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
             // Domain to API Resource
-            CreateMap<VehicleQueryResource, VehicleQuery>();
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
             CreateMap<Make, MakeResource>();
             CreateMap<Make, KeyValuePairResource>();
             CreateMap<Model, KeyValuePairResource>();
@@ -25,6 +24,7 @@ namespace vega.Mapping
               .ForMember(vr => vr.Features, opt => opt.MapFrom(v => v.Features.Select(vf => new KeyValuePairResource { Id = vf.Feature.Id, Name = vf.Feature.Name })));
 
             // API Resource to Domain
+            CreateMap<VehicleQueryResource, VehicleQuery>();
             CreateMap<SaveVehicleResource, Vehicle>()
               .ForMember(v => v.Id, opt => opt.Ignore())
               .ForMember(v => v.ContactName, opt => opt.MapFrom(vr => vr.Contact.Name))

@@ -34,7 +34,7 @@ export class VehicleFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router ) { 
       route.params.subscribe(p => {
-        this.vehicle.id = +p['id'];
+        this.vehicle.id = +p['id'] || 0;
       });
     }
 
@@ -77,14 +77,15 @@ export class VehicleFormComponent implements OnInit {
     this.vehicle.features = _.pluck(v.features, 'id');
   } 
 
+  onMakeChange() {
+    this.populateModels();
+
+    delete this.vehicle.modelId;
+  }
+
   private populateModels() {
     var selectedMake = this.makes.find(m => m.id == this.vehicle.makeId);
     this.models = selectedMake ? selectedMake.models : [];
-  }
-
-  onMakeChange() {
-    this.populateModels();
-    delete this.vehicle.modelId;
   }
 
   onFeatureToggle(featureId, $event) {
@@ -97,25 +98,9 @@ export class VehicleFormComponent implements OnInit {
   }
 
   submit() {
-    if(!this.vehicle.id){
-      console.log(this.vehicle.id);
-      this.vehicleService.create(this.vehicle)
-      .subscribe(x => console.log(x));
-    }else{
-      console.log("updating");
-      this.vehicleService.update(this.vehicle)
-      .subscribe(x => console.log(x));
-    }
-
+    var result$ = (this.vehicle.id) ? this.vehicleService.update(this.vehicle) : this.vehicleService.create(this.vehicle); 
+    result$.subscribe(vehicle => {
+      this.router.navigate(['/vehicles/', vehicle.id])
+    });
   }
-
-  delete() {
-    if (confirm("Are you sure?")){
-      this.vehicleService.delete(this.vehicle.id)
-        .subscribe(x => {
-          this.router.navigate(['/']);
-        });
-    }
-  }
-
 }
