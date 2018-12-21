@@ -2,15 +2,21 @@
 <div>
 
   <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
+  <!-- <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">Vehicle</a></li>
     <li role="presentation"><a href="#photos" aria-controls="photos" role="tab" data-toggle="tab">Photos</a></li>
-  </ul>
+  </ul> -->
 
   <!-- Tab panes -->
   <div class="tab-content" *ngIf="vehicle">
+    <!-- Photos tab -->
+    <div>
+        <h2>Photos</h2>
+        <input type="file" (change)="uploadPhoto()" #fileInput> 
+        <img *ngFor="let photo of photos" src="/uploads/{{ photo.fileName }}" class="img-thumbnail">
+    </div>
     <!-- Vehicle tab -->
-    <div role="tabpanel" class="tab-pane active" id="basic">
+    <div>
       <h2>Basics</h2>
       <ul>
         <li>Make: {{ vehicle.make.name }}</li>
@@ -33,10 +39,6 @@
         <button class="btn btn-danger" (click)="delete()">Delete</button>
         <a class="btn btn-default" [routerLink]="['/vehicles']">View All Vehicles</a>
       </p>
-    </div>
-    <!-- Photos tab -->
-    <div role="tabpanel" class="tab-pane" id="photos">
-      <h2>Photos</h2>
     </div>
   </div>
 </div>

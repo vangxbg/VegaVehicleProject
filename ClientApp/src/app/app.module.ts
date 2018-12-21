@@ -1,3 +1,4 @@
+import { PhotoService } from './services/photo.service';
 import { AppComponent } from './app.component';
 import { VehicleService } from './services/vehicle.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -52,6 +53,7 @@ import { ViewVehicleComponent } from './view-vehicle/view-vehicle';
   ],
   providers: [
     // { provide: ErrorHandler, useClass: AppErrorHandler },
+    PhotoService,
     VehicleService,
     HttpClient,
     HttpClientModule,
