@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,11 +26,27 @@ namespace Vega
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // 1. Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://vegaproject1988.auth0.com/";
+                options.Audience = "https://api.vega.com";
+            });
 
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+
+            services.AddTransient<IPhotoService, PhotoService>();
+
+            // in the future we can check environment and store the photo based on the environment
+            services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
+
             services.AddScoped<IPhotoRepository, PhotoRepository>();
 
             services.AddScoped<IVehicleRepository, VehicleRepository>();
@@ -37,6 +54,10 @@ namespace Vega
             services.AddAutoMapper();
 
             services.AddDbContext<VegaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+            // services.AddAuthorization(options => {
+            //     options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("https://vega.com/roles", "Admin"));
+            // });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -63,6 +84,8 @@ namespace Vega
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

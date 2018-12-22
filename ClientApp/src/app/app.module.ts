@@ -1,3 +1,4 @@
+import { AuthService } from './services/auth.service';
 import { PhotoService } from './services/photo.service';
 import { AppComponent } from './app.component';
 import { VehicleService } from './services/vehicle.service';
@@ -58,7 +59,8 @@ import { ViewVehicleComponent } from './view-vehicle/view-vehicle';
     HttpClient,
     HttpClientModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })
